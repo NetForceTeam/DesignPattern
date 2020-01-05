@@ -36,16 +36,22 @@ namespace DoFactory.GangOfFour.Singleton.Structural
     class Singleton
     {
         private static Singleton _instance;
+        private static readonly object _padlock = new object();
 
         // Constructor is 'protected'
         protected Singleton() { }
 
         public static Singleton Instance()
         {
-            // Uses lazy initialization. Note: this is not thread safe.
             if (_instance == null)
             {
-                _instance = new Singleton();
+                lock (_padlock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new Singleton();
+                    }
+                }
             }
             return _instance;
         }
